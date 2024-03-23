@@ -1,0 +1,44 @@
+---
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+
+const { id } = Astro.props;
+---
+<form id="createCardForm">
+    <Label htmlFor="subject">Subject</Label>
+    <Input name="subject" id="subject" />
+    <Label htmlFor="q">Question</Label>
+    <Input name="q" id="q" />
+    <Label htmlFor="a">Answer</Label>
+    <input type="hidden" name="by" value={id} />
+    <Textarea id="a" name="a"></Textarea>
+    <button>Create Card</button>
+</form>
+<script>
+const form = document.getElementById('createCardForm') as HTMLFormElement;
+
+function getDataFromForm(el: HTMLElement, _index: number) {
+    switch(true) {
+        case el instanceof HTMLInputElement:
+        case el instanceof HTMLTextAreaElement:
+            return {
+                [el.name]: el.value
+            }
+        default:
+            return false;
+    }
+}
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // @ts-ignore
+    const data = Object.assign({}, ...Array.from<HTMLElement>(form.elements, getDataFromForm).filter(Boolean));
+
+    console.log(data);
+    const response = navigator.sendBeacon(new URL('/api/create', window.location.href), JSON.stringify(data))
+
+    console.log(response);
+})
+</script>

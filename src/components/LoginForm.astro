@@ -1,0 +1,10 @@
+---
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+---
+<form action="/" method="POST">
+    <Input client:only="react" id="username" name="username"/>
+    <Label client:only="react" htmlFor="username" />
+    <input type="hidden" name="accountCreatedOn" value={Date.now()}>
+    <button type="submit">Login</button>
+</form>
